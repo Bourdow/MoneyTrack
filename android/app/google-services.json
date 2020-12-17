@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "963921397662",
+    "project_id": "moneytrack-dee60",
+    "storage_bucket": "moneytrack-dee60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963921397662:android:ad5afdbdeb2b246355f88f",
+        "android_client_info": {
+          "package_name": "com.moneytrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963921397662-lcgl5npeuvdjjaj7pu58a0cv0jc7mjd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqfvAWzHPyy8UW8mZtDW51djQ3nMr4wtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963921397662-lcgl5npeuvdjjaj7pu58a0cv0jc7mjd9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "963921397662-3u5840g5eom3u1q83ilnlsbq0t2fq3r5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.MoneyTrack"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
