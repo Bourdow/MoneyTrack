@@ -1,118 +1,90 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-declare const global: {HermesInternal: null | {}};
+  Text,
+  View,
+} from 'react-native'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import styles from './src/styles';
+import LoginScreen from './src/screens/LoginScreen';
+import SignupScreen from './src/screens/SignupScreen';
+import { AuthContextProvider } from './src/contexts/AuthContext';
+import HomeScreen from './src/screens/HomeScreen';
+import HeaderComponent from './src/components/HeaderComponent';
+import { FirestoreContextProvider } from './src/contexts/FirestoreContext';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList, DrawerScreenProps } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RootStackParamsList } from './src/types';
+import CreationScreen from './src/screens/CreationScreen';
 
 const App = () => {
+
+  const [token, setToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    getToken()
+  }, [])
+
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem('MoneyTrackToken')
+    setToken(token)
+  }
+
+  const AppDrawerStack = createDrawerNavigator();
+
+  const CustomDrawerContent = (props: any) => {
+    return (
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem label="Déconnexion" onPress={async () => {
+          await AsyncStorage.multiRemove(['MoneyTrackToken', 'MoneyTrackUserUID', 'MoneyTrackFirstname', 'MoneyTrackLastname'])
+          props.navigation.navigate('Login')
+        }} />
+      </DrawerContentScrollView>
+    )
+  }
+
+  const MyAppDrawerStack = (props: any) => {
+    return (
+      <AppDrawerStack.Navigator
+        drawerContent={props => <CustomDrawerContent {...props} />}
+        drawerStyle={styles.drawer}
+      >
+        <AppDrawerStack.Screen name="Home" component={HomeScreen}
+          options={{ drawerLabel: "Accueil" }} initialParams={{ token: token }}
+        />
+        <AppDrawerStack.Screen name="Creation" component={CreationScreen}
+          options={{ drawerLabel: "Nouvelle dépense" }}
+        />
+      </AppDrawerStack.Navigator>
+    )
+  }
+
+  const LogStack = createStackNavigator();
+  const MyLogStack = () => {
+    return (
+      <LogStack.Navigator initialRouteName={token == "autolog" ? 'App' : 'Login'} headerMode="none">
+        <LogStack.Screen name="Login" component={LoginScreen} />
+        <LogStack.Screen name="Signup" component={SignupScreen} />
+        <LogStack.Screen name="App" component={MyAppDrawerStack} />
+      </LogStack.Navigator>
+    )
+  }
+
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <AuthContextProvider>
+      <FirestoreContextProvider>
+        <NavigationContainer>
+          <StatusBar barStyle="dark-content" />
+          <SafeAreaView style={styles.container}>
+            <MyLogStack />
+          </SafeAreaView>
+        </NavigationContainer>
+      </FirestoreContextProvider>
+    </AuthContextProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
 
 export default App;
