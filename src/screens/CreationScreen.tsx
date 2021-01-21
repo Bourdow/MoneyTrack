@@ -13,29 +13,51 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { WINDOW_WIDTH } from '../constants';
 import moment from 'moment';
+import { CommonActions } from '@react-navigation/native';
 
 
 type Props = DrawerScreenProps<RootStackParamsList, 'Creation'>
 
-const CreationScreen: React.FC<Props> = ({ navigation }) => {
+const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
     const [amount, setAmount] = useState<string>('')
     const [date, setDate] = useState<Date>(new Date())
+    const [category, setCategory] = useState<string>('')
+    const [buttonTitle, setButtonTitle] = useState<string>('Ajouter')
     // Modal
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const [category, setCategory] = useState<string>('')
     const store = useFirestore()
 
+    useEffect(() => {
+        if (route.params?.expense != undefined) {
+            setButtonTitle('Valider')
+            setTitle(route.params.expense!.title)
+            setAmount(route.params.expense!.amount.toString())
+            setCategory(route.params.expense!.category)
+            setDate(new Date(route.params.expense!.date))
+        }
+    }, [])
+
     const addExpense = () => {
-        store.addExpense(title, moment(date).format('DD/MM/YYYY'), Number(amount), category).then(() => {
+        store.addExpense(title, moment(date).format("YYYY-MM-DD"), Number(amount), category).then(() => {
             store.getExpenses()
             navigation.goBack()
             reset()
         })
     }
+
+    const updateExpense = () => {
+        store.updateExpense(route.params.expense!.id, title, moment(date).format("YYYY-MM-DD"), Number(amount), category).then(() => {
+            store.getExpenses()
+            navigation.goBack()
+            reset()
+        })
+    }
+
+
 
     const reset = () => {
         setTitle('')
@@ -56,6 +78,14 @@ const CreationScreen: React.FC<Props> = ({ navigation }) => {
         setDate(date)
         setDatePickerVisibility(false);
     };
+
+    const pressHandler = () => {
+        if (buttonTitle == 'Ajouter') {
+            addExpense()
+        } else {
+            updateExpense()
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -113,9 +143,9 @@ const CreationScreen: React.FC<Props> = ({ navigation }) => {
                     />
 
                 </View>
-                <TouchableOpacity onPress={() => addExpense()}
+                <TouchableOpacity onPress={pressHandler}
                     style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8' }]}>
-                    <Text style={styles.logsButtonText}>Ajouter</Text>
+                    <Text style={styles.logsButtonText}>{buttonTitle}</Text>
                 </TouchableOpacity>
             </View>
         </View>

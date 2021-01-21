@@ -12,16 +12,12 @@ type Props = {
 
 const SwipeComponent: React.FC<Props> = ({ color, name, onPress }) => {
 
-
-    console.log("-- name icon --")
-    console.log(name)
-
     return (
             <TouchableOpacity>
                 <Icon
                     onPress={() => onPress}
                     type="font-awesome"
-                    name={"edit"}
+                    name={name}
                     size={WINDOW_WIDTH * 0.1}
                     color={color}
                 />

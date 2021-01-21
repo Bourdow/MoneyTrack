@@ -1,19 +1,16 @@
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import React from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { Animated, FlatList, Text, View } from 'react-native'
 import { Divider, Icon } from 'react-native-elements'
-import SwipeableItem from 'react-native-swipeable-item'
 import ExpenseComponent from '../components/ExpenseComponent'
 import HeaderComponent from '../components/HeaderComponent'
 import SwipeComponent from '../components/SwipeComponent'
+import SwipeableComponent from '../components/SwipeableComponent'
 import { WINDOW_WIDTH } from '../constants'
 import { useAuth } from '../contexts/AuthContext'
 import { useFirestore } from '../contexts/FirestoreContext'
 import styles from '../styles'
 import { Expense, RootStackParamsList } from '../types'
-
-// Swipe component
-
 type Props = DrawerScreenProps<RootStackParamsList, 'Home'>
 
 const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
@@ -29,8 +26,6 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
         store.getExpenses()
     }, [])
 
-
-
     return (
         <View style={styles.container}>
             <HeaderComponent title="Mon compte" handleDrawer={() => navigation.toggleDrawer()} />
@@ -43,18 +38,9 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
             <FlatList
                 data={store.expenses}
                 keyExtractor={(item, index) => item.title + item.category + item.amount.toString() + "_" + index}
-                renderItem={({ item, }) => {
-                    return (
-                        <SwipeableItem
-                            item={{ item }}
-                            renderUnderlayLeft={() => <SwipeComponent color="#fff" name="edit" onPress={() => console.log("test left")} />}
-                            renderUnderlayRight={() => <SwipeComponent color="#fff" name="edit" onPress={() => console.log("test left")} />}
-                            renderOverlay={() => <ExpenseComponent expense={item} />}
-                        />
-                    )
-                }}
+                renderItem={({ item }) => <SwipeableComponent expense={item} navigation={navigation} />}
             />
-            <Icon onPress={() => navigation.navigate('Creation')}
+            <Icon onPress={() => navigation.navigate('Creation', {})}
                 type="entypo" name="circle-with-plus" size={WINDOW_WIDTH * 0.10} color="#E4B429" />
         </View>
     )

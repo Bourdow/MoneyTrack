@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     drawer: {
         backgroundColor: '#E4B429',
-        width: WINDOW_WIDTH * 0.8
+        width: WINDOW_WIDTH * 0.9
     },
     expenseCard: {
         width: WINDOW_WIDTH * 0.85,
@@ -142,7 +142,38 @@ const styles = StyleSheet.create({
         height: 100,
         alignSelf: 'center',
         marginVertical: 5,
-    }
+    },
+    headerDrawer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: WINDOW_WIDTH * 0.06
+    },
+    itemDrawer: {
+        paddingVertical: WINDOW_WIDTH * 0.02,
+        marginHorizontal: WINDOW_WIDTH * 0.02,
+        marginVertical: WINDOW_WIDTH * 0.06
+    },
+    borderBottomDrawerItems: {
+        borderBottomColor: '#fff',
+        borderBottomWidth: 5
+    },
+    swipeLeftAction: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    swipeActionText: {
+        color: 'white',
+        fontSize: 16,
+        backgroundColor: 'transparent',
+        padding: 10,
+    },
+    swipeRightAction: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 })
 
 export default styles

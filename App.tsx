@@ -5,7 +5,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
+import { CommonActions, DrawerActions, DrawerNavigationState, NavigationContainer, ParamListBase } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import styles from './src/styles';
 import LoginScreen from './src/screens/LoginScreen';
@@ -14,10 +14,15 @@ import { AuthContextProvider } from './src/contexts/AuthContext';
 import HomeScreen from './src/screens/HomeScreen';
 import HeaderComponent from './src/components/HeaderComponent';
 import { FirestoreContextProvider } from './src/contexts/FirestoreContext';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList, DrawerScreenProps } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentOptions, DrawerContentScrollView, DrawerItem, DrawerItemList, DrawerScreenProps } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamsList } from './src/types';
 import CreationScreen from './src/screens/CreationScreen';
+import HeaderDrawerComponent from './src/components/HeaderDrawerComponent';
+import { DrawerDescriptorMap, DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
+import { Props } from 'react-native-tab-view/lib/typescript/src/TabBarItem';
+import DrawerItemCustom from './src/components/DrawerItemCustom';
+import StatisticsScreen from './src/screens/StatisticsScreen';
 
 const App = () => {
 
@@ -34,14 +39,36 @@ const App = () => {
 
   const AppDrawerStack = createDrawerNavigator();
 
-  const CustomDrawerContent = (props: any) => {
+  type PropsDrawer = Omit<DrawerContentOptions, 'contentContainerStyle' | 'style'> & {
+    state: DrawerNavigationState<ParamListBase>;
+    navigation: DrawerNavigationHelpers;
+    descriptors: DrawerDescriptorMap;
+  };
+
+  const CustomDrawerContent: React.FC<PropsDrawer> = ({ state, descriptors, navigation }) => {
     return (
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-        <DrawerItem label="Déconnexion" onPress={async () => {
-          await AsyncStorage.multiRemove(['MoneyTrackToken', 'MoneyTrackUserUID', 'MoneyTrackFirstname', 'MoneyTrackLastname'])
-          props.navigation.navigate('Login')
-        }} />
+      <DrawerContentScrollView contentContainerStyle={{ flex: 1, justifyContent: 'space-between' }} {...state} {...descriptors} {...navigation}>
+        <View>
+          <HeaderDrawerComponent handleDrawer={() => navigation.toggleDrawer()} />
+          {
+            state.routes.map((route, i) => {
+              const focused = i === state.index
+              const { drawerLabel } = descriptors[route.key].options;
+              return <DrawerItemCustom key={route.key} focused={focused} title={drawerLabel} onPress={() => {
+                navigation.dispatch({
+                  ...(focused ? DrawerActions.closeDrawer() : CommonActions.navigate(route.name)),
+                  target: state.key
+                })
+              }} />
+            })
+          }
+        </View>
+        <View style={{ backgroundColor: '#202020', borderTopColor: '#fff', borderTopWidth: 5 }}>
+          <DrawerItemCustom title={"Déconnexion"} onPress={async () => {
+            await AsyncStorage.multiRemove(['MoneyTrackToken', 'MoneyTrackUserUID', 'MoneyTrackFirstname', 'MoneyTrackLastname'])
+            navigation.navigate('Login')
+          }} />
+        </View>
       </DrawerContentScrollView>
     )
   }
@@ -53,10 +80,13 @@ const App = () => {
         drawerStyle={styles.drawer}
       >
         <AppDrawerStack.Screen name="Home" component={HomeScreen}
-          options={{ drawerLabel: "Accueil" }} initialParams={{ token: token }}
+          options={{ drawerLabel: "Mes dépenses" }} initialParams={{ token: token }}
         />
         <AppDrawerStack.Screen name="Creation" component={CreationScreen}
           options={{ drawerLabel: "Nouvelle dépense" }}
+        />
+        <AppDrawerStack.Screen name="Stats" component={StatisticsScreen}
+          options={{ drawerLabel: "Mes stats" }}
         />
       </AppDrawerStack.Navigator>
     )
