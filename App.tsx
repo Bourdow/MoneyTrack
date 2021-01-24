@@ -23,6 +23,7 @@ import { DrawerDescriptorMap, DrawerNavigationHelpers } from '@react-navigation/
 import { Props } from 'react-native-tab-view/lib/typescript/src/TabBarItem';
 import DrawerItemCustom from './src/components/DrawerItemCustom';
 import StatisticsScreen from './src/screens/StatisticsScreen';
+import ExpensesScreen from './src/screens/ExpensesScreen';
 
 const App = () => {
 
@@ -80,7 +81,10 @@ const App = () => {
         drawerStyle={styles.drawer}
       >
         <AppDrawerStack.Screen name="Home" component={HomeScreen}
-          options={{ drawerLabel: "Mes dépenses" }} initialParams={{ token: token }}
+          options={{ drawerLabel: "Accueil" }} initialParams={{ token: token }}
+        />
+        <AppDrawerStack.Screen name="Expenses" component={ExpensesScreen}
+          options={{ drawerLabel: "Mes dépenses" }}
         />
         <AppDrawerStack.Screen name="Creation" component={CreationScreen}
           options={{ drawerLabel: "Nouvelle dépense" }}

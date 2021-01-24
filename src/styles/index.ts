@@ -174,6 +174,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    seeAllButton: {
+        borderRadius: 10,
+        backgroundColor: '#00A3D8',
+        alignSelf: 'center',
+    },
+    seeAllButtonText: {
+        color: '#fff',
+        fontSize: WINDOW_WIDTH * 0.05,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    }
 })
 
 export default styles

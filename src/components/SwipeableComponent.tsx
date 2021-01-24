@@ -15,7 +15,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 type Props = {
   expense: Expense,
-  navigation: DrawerNavigationProp<RootStackParamsList, 'Home'>
+  navigation: DrawerNavigationProp<RootStackParamsList, 'Home' | 'Expenses'>
 }
 
 const SwipeableComponent: React.FC<Props> = ({ expense, navigation }) => {

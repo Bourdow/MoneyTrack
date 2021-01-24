@@ -1,6 +1,6 @@
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import React from 'react'
-import { Animated, FlatList, Text, View } from 'react-native'
+import { Animated, FlatList, Text, TouchableOpacity, View } from 'react-native'
 import { Divider, Icon } from 'react-native-elements'
 import ExpenseComponent from '../components/ExpenseComponent'
 import HeaderComponent from '../components/HeaderComponent'
@@ -18,6 +18,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
     const auth = useAuth()
 
     const [firstname, setFirstname] = React.useState<string | null>('')
+    const [lastExpenses, setLastExpenses] = React.useState<Expense[]>([])
 
     React.useEffect(() => {
         if (route.params?.token == 'autolog') {
@@ -25,6 +26,16 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
         }
         store.getExpenses()
     }, [])
+
+    React.useEffect(() => {
+        if (store.expenses.length != 0) {
+            getLastExpenses()
+        }
+    }, [store.expenses])
+
+    const getLastExpenses = () => {
+        setLastExpenses([store.expenses[0], store.expenses[1], store.expenses[2]])
+    }
 
     return (
         <View style={styles.container}>
@@ -36,10 +47,14 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
             <Divider style={styles.bigDivider} />
             <Text style={styles.flatlistText}>Dernières dépenses</Text>
             <FlatList
-                data={store.expenses}
+                data={lastExpenses}
                 keyExtractor={(item, index) => item.title + item.category + item.amount.toString() + "_" + index}
                 renderItem={({ item }) => <SwipeableComponent expense={item} navigation={navigation} />}
             />
+            <TouchableOpacity onPress={() => navigation.navigate('Expenses')}
+                style={[styles.seeAllButton, styles.containerPadding, styles.containerMargin]}>
+                <Text style={styles.seeAllButtonText}>Voir tout</Text>
+            </TouchableOpacity>
             <Icon onPress={() => navigation.navigate('Creation', {})}
                 type="entypo" name="circle-with-plus" size={WINDOW_WIDTH * 0.10} color="#E4B429" />
         </View>

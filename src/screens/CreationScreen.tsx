@@ -8,17 +8,21 @@ import { useFirestore } from '../contexts/FirestoreContext';
 import styles from '../styles';
 import { Category, RootStackParamsList } from '../types';
 import { Picker } from '@react-native-picker/picker';
-
 // Calendar 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { WINDOW_WIDTH } from '../constants';
 import moment from 'moment';
-import { CommonActions } from '@react-navigation/native';
+import { useIsFocused, CommonActions } from '@react-navigation/native';
 
 
 type Props = DrawerScreenProps<RootStackParamsList, 'Creation'>
 
-const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
+type PropsReal = {
+    props: Props,
+    isFocused: boolean
+}
+
+const CreationRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
 
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [title, setTitle] = useState<string>('')
@@ -28,31 +32,50 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
     const [buttonTitle, setButtonTitle] = useState<string>('Ajouter')
     // Modal
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+    const refDate = React.createRef<Input>()
+    const refCategory = React.createRef<Input>()
     const store = useFirestore()
 
     useEffect(() => {
-        if (route.params?.expense != undefined) {
-            setButtonTitle('Valider')
-            setTitle(route.params.expense!.title)
-            setAmount(route.params.expense!.amount.toString())
-            setCategory(route.params.expense!.category)
-            setDate(new Date(route.params.expense!.date))
+        console.log(props.route);
+
+        if (isFocused) {
+            if (props.route.params?.expense != undefined && props.route.params?.expense != null) {
+                setButtonTitle('Valider')
+                setTitle(props.route.params.expense!.title)
+                setAmount(props.route.params.expense!.amount.toString())
+                setCategory(props.route.params.expense!.category)
+                setDate(new Date(props.route.params.expense!.date))
+            } else {
+                console.log("reset");
+                reset()
+            }
+        } else {
+            props.navigation.dispatch(CommonActions.setParams({ expense: null }))
+            reset()
         }
-    }, [])
+    }, [isFocused])
+
+    useEffect(() => {
+        refDate.current?.blur()
+    }, [isDatePickerVisible])
+
+    useEffect(() => {
+        refCategory.current?.blur()
+    }, [isVisible])
 
     const addExpense = () => {
         store.addExpense(title, moment(date).format("YYYY-MM-DD"), Number(amount), category).then(() => {
             store.getExpenses()
-            navigation.goBack()
+            props.navigation.navigate('Home', {})
             reset()
         })
     }
 
     const updateExpense = () => {
-        store.updateExpense(route.params.expense!.id, title, moment(date).format("YYYY-MM-DD"), Number(amount), category).then(() => {
+        store.updateExpense(props.route.params.expense!.id, title, moment(date).format("YYYY-MM-DD"), Number(amount), category).then(() => {
             store.getExpenses()
-            navigation.goBack()
+            props.navigation.navigate('Home', {})
             reset()
         })
     }
@@ -71,6 +94,7 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
     };
 
     const hideDatePicker = () => {
+        refDate.current?.blur()
         setDatePickerVisibility(false);
     };
 
@@ -87,6 +111,7 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
         }
     }
 
+
     return (
         <View style={styles.container}>
             <Overlay isVisible={isVisible} >
@@ -102,11 +127,14 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
                             store.categories.map((category: Category) => <Picker.Item key={category.id} label={category.name} value={category.name} />)
                         }
                     </Picker>
-                    <Icon onPress={() => setIsVisible(false)}
+                    <Icon onPress={() => {
+                        refCategory.current?.blur()
+                        setIsVisible(false)
+                    }}
                         name="checkmark-circle" type="ionicon" size={WINDOW_WIDTH * 0.1} color="#00A3D8" />
                 </>
             </Overlay>
-            <HeaderComponent title="Nouv. dépense" handleDrawer={() => navigation.toggleDrawer()} />
+            <HeaderComponent title="Nouv. dépense" handleDrawer={() => props.navigation.toggleDrawer()} />
             <View style={[styles.container, { justifyContent: 'center' }]}>
                 <View style={[styles.container, { justifyContent: 'center' }]}>
                     <Input label="Titre" placeholder="Soda"
@@ -121,6 +149,7 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
 
 
                     <Input
+                        ref={refDate}
                         label="Date d'achat"
                         placeholder="12/05/2019"
                         value={moment(date).format('DD/MM/YYYY')}
@@ -137,11 +166,11 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
                         onCancel={hideDatePicker}
                         date={date}
                     />
-                    <Input label="Catégorie" placeholder="Aucune" onFocus={() => setIsVisible(true)}
+                    <Input ref={refCategory}
+                        label="Catégorie" placeholder="Aucune" onFocus={() => setIsVisible(true)}
                         value={category}
                         containerStyle={styles.containerLogsInput} inputContainerStyle={{ borderBottomWidth: 0 }} style={[styles.containerPadding, styles.logsInput]}
                     />
-
                 </View>
                 <TouchableOpacity onPress={pressHandler}
                     style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8' }]}>
@@ -149,6 +178,13 @@ const CreationScreen: React.FC<Props> = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
         </View>
+    )
+}
+
+const CreationScreen: React.FC<Props> = (props) => {
+    const isFocused = useIsFocused()
+    return (
+        <CreationRealScreen props={props} isFocused={isFocused} />
     )
 }
 

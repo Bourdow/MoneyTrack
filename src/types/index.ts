@@ -5,8 +5,9 @@ export type RootStackParamsList = {
     Signup: undefined,
     App: undefined,
     Home: {
-        token: string | null
+        token?: string | null
     },
+    Expenses: undefined,
     Creation: {
         expense?: Expense
     },
