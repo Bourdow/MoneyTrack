@@ -62,8 +62,6 @@ export const FirestoreContextProvider: React.FC = ({ children }) => {
 
     // READ
     const getExpenses = async () => {
-        console.log("getexpenses");
-
         const expensesData = (await expensesCollection.where('owner', '==', user!.uid).get()).docs
         const expenses = expensesData.map((data) => toExpense(data))
         expenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

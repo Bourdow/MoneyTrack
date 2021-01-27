@@ -41,7 +41,7 @@ const ModalComponent: React.FC<Props> = ({ isVisible, handleVisibility, handleFi
                 <View>
                     <Text style={styles.headerText}>Filtrer par :</Text>
                     <View style={styles.containerPadding}>
-                        <Text>Catégorie</Text>
+                        <Text style={styles.headerText}>Catégorie</Text>
                         {
                             store.categories.map((category) => {
                                 const isIn = filters.includes(category.name)

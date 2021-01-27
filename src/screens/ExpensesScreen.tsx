@@ -80,8 +80,12 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                     const data = expensesData.filter((expense) => expense.category == category.name)
                     expensesByCat.push({ category: category, expenses: data })
                 })
-
-                setExpensesByCategory(expensesByCat)
+                if (filters.length != 0) {
+                    let expensesByCtg = expensesByCat.filter((expense) => filters.includes(expense.category.name))
+                    setExpensesByCategory(expensesByCtg)
+                } else {
+                    setExpensesByCategory(expensesByCat)
+                }
                 break;
             default:
                 break;
@@ -111,10 +115,11 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
         );
     };
 
-    const _updateSections = (activeSections: any) => {
-        console.log(activeSections);
+    const _updateSections = (sections: number[]) => {
+        let temp = activeSections
+        console.log("temp", temp);
 
-        setActiveSections(activeSections)
+        setActiveSections(sections)
     };
 
     const handleFilters = (value: string, type: string) => {
@@ -143,7 +148,7 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                 {
                     ["Par date", "Par catégorie", "Par montant"].map((value) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity key={value} onPress={() => {
                                 setExpenses([])
                                 setFilter(value)
                             }}
@@ -158,7 +163,7 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                 {
                     displayCategories ?
                         <Accordion
-                            containerStyle={styles.container}
+                            containerStyle={[styles.container, styles.containerPadding]}
                             activeSections={activeSections}
                             sections={expensesByCategory}
                             renderHeader={(section, index) => _renderHeader(section, index)}

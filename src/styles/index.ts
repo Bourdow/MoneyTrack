@@ -184,6 +184,11 @@ const styles = StyleSheet.create({
         fontSize: WINDOW_WIDTH * 0.05,
         fontWeight: 'bold',
         textAlign: 'center'
+    },
+    filterText: {
+        fontSize: WINDOW_WIDTH * 0.08,
+        color: '#00A3D8',
+        fontFamily: 'BAHNSCHRIFT'
     }
 })
 

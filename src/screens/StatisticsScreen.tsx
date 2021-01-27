@@ -49,6 +49,8 @@ const StatisticsRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
                 totalAmount: totalAmount
             })
         })
+        console.log(statistics);
+
         setSlices(statistics.map((value, index) => {
             const color = randomColor()
             return ({
@@ -59,7 +61,7 @@ const StatisticsRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
                         setSelectedSlice({ label: value.category, value: value.totalAmount })
                     },
                 },
-                arc: { outerRadius: (80 + value.totalAmount / 100) + '%', padAngle: selectedSlice.label === value.category ? 0.1 : 0 },
+                arc: { outerRadius: (70 + value.totalAmount / 100) + '%', padAngle: selectedSlice.label === value.category ? 0.1 : 0 },
                 key: value.category,
             })
         })
