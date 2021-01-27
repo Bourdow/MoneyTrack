@@ -17,7 +17,6 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
     const store = useFirestore()
     const auth = useAuth()
 
-    const [firstname, setFirstname] = React.useState<string | null>('')
     const [lastExpenses, setLastExpenses] = React.useState<Expense[]>([])
 
     React.useEffect(() => {
@@ -34,7 +33,15 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
     }, [store.expenses])
 
     const getLastExpenses = () => {
-        setLastExpenses([store.expenses[0], store.expenses[1], store.expenses[2]])
+        if (store.expenses.length >= 3) {
+            setLastExpenses([store.expenses[0], store.expenses[1], store.expenses[2]])
+        } else {
+            let tempExpenses: Expense[] = []
+            store.expenses.map((expense) => {
+                tempExpenses.push(expense)
+            })
+            setLastExpenses(tempExpenses)
+        }
     }
 
     return (
@@ -48,7 +55,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
             <Text style={styles.flatlistText}>Dernières dépenses</Text>
             <FlatList
                 data={lastExpenses}
-                keyExtractor={(item, index) => item.id + item.title + item.category + item.amount.toString() + "_" + index}
+                keyExtractor={(item, index) => item.title + item.category + item.amount.toString() + "_" + index}
                 renderItem={({ item }) => <SwipeableComponent expense={item} navigation={navigation} />}
             />
             <TouchableOpacity onPress={() => navigation.navigate('Expenses')}

@@ -65,6 +65,8 @@ export const FirestoreContextProvider: React.FC = ({ children }) => {
         const expensesData = (await expensesCollection.where('owner', '==', user!.uid).get()).docs
         const expenses = expensesData.map((data) => toExpense(data))
         expenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        console.log(expenses);
+
         setExpenses(expenses)
     }
 
@@ -86,7 +88,7 @@ export const FirestoreContextProvider: React.FC = ({ children }) => {
 
     /* FIN du CRUD des dépenses */
 
-   
+
     /* Début du CRUD des catégories */
     // READ
     const getCategories = async () => {

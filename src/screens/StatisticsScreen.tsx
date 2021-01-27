@@ -44,12 +44,13 @@ const StatisticsRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
             expensesData.map((expense) => {
                 totalAmount += expense.amount
             })
-            statistics.push({
-                category: category.name,
-                totalAmount: totalAmount
-            })
+            if (totalAmount != 0) {
+                statistics.push({
+                    category: category.name,
+                    totalAmount: totalAmount
+                })
+            }
         })
-        console.log(statistics);
 
         setSlices(statistics.map((value, index) => {
             const color = randomColor()

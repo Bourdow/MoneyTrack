@@ -58,11 +58,11 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
                 <>
                 </>
             </Overlay>
-            <View style={styles.centerChildren}>
+            <TouchableOpacity style={styles.centerChildren} onPress={() => navigation.goBack()}>
                 <Image style={styles.logo}
                     source={require('../resources/MoneyTrackIcon.png')}
                 />
-            </View>
+            </TouchableOpacity>
 
             <View style={[styles.container, { justifyContent: 'space-around' }]}>
                 <Text style={styles.title}>Money Track</Text>

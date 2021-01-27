@@ -50,8 +50,12 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                     const data = expensesData.filter((expense) => expense.category == category.name)
                     expensesByCat.push({ category: category, expenses: data })
                 })
-
-                setExpensesByCategory(expensesByCat)
+                if (filters.length != 0) {
+                    let expensesByCtg = expensesByCat.filter((expense) => filters.includes(expense.category.name))
+                    setExpensesByCategory(expensesByCtg)
+                } else {
+                    setExpensesByCategory(expensesByCat)
+                }
                 break;
             default:
                 break;
