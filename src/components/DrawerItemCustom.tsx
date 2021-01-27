@@ -13,8 +13,8 @@ const DrawerItemCustom: React.FC<Props> = ({ title, onPress, focused }) => {
 
     return (
         <TouchableOpacity onPress={() => onPress()}
-            style={[styles.borderBottomDrawerItems, styles.itemDrawer, { borderBottomColor: focused ? '#00A3D8' : '#fff' }]}>
-            <Text style={[styles.headerText, { color: focused ? '#00A3D8' : '#fff' }]}>{title}</Text>
+            style={[styles.borderBottomDrawerItems, styles.itemDrawer, { borderBottomColor: focused ? '#202020' : '#fff' }]}>
+            <Text style={[styles.headerText, { color: focused ? '#202020' : '#fff' }]}>{title}</Text>
         </TouchableOpacity>
     )
 }

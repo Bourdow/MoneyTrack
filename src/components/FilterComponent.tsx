@@ -23,7 +23,7 @@ const FilterComponent: React.FC<Props> = ({ categoryName, handleAdd, handleDelet
     }
 
     return (
-        <View style={[styles.containerMargin, { flexDirection: 'row', alignItems: 'center' }]}>
+        <View style={[styles.containerMargin, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
             <Text style={[styles.filterText, { marginRight: 10 }]}>{categoryName}</Text>
             <Switch thumbColor="#00A3D8" trackColor={{ true: "#fff", false: "#000" }} value={switched} onValueChange={switched => handleSwitch(switched)} />
         </View>

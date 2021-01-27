@@ -6,6 +6,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#202020',
         flex: 1,
     },
+    columnContainer: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
     centerChildren: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -189,7 +193,12 @@ const styles = StyleSheet.create({
         fontSize: WINDOW_WIDTH * 0.08,
         color: '#00A3D8',
         fontFamily: 'BAHNSCHRIFT'
-    }
+    },
+    containerPickerFilter: {
+        margin: WINDOW_WIDTH * 0.03, 
+        backgroundColor: "#fff", 
+        borderRadius: 10,
+    },
 })
 
 export default styles

@@ -33,15 +33,15 @@ const ModalComponent: React.FC<Props> = ({ isVisible, handleVisibility, handleFi
             animationIn="slideInRight"
             animationOut="slideOutRight"
             onSwipeComplete={() => handleVisibility()}
-            backdropColor='#E4B429'
+            backdropColor='#202020'
             backdropOpacity={1}
             onModalHide={() => handleDisplay()}
         >
             <SafeAreaView style={[styles.containerPadding, { flex: 1, justifyContent: "space-between" }]}>
                 <View>
-                    <Text style={styles.headerText}>Filtrer par :</Text>
+                    <Text style={[styles.headerText, {textDecorationLine: 'underline', marginBottom: 20}]}>Filtrer par :</Text>
                     <View style={styles.containerPadding}>
-                        <Text style={styles.headerText}>Catégorie</Text>
+                        <Text style={[styles.headerText, {fontWeight: 'normal'}]}>Catégories</Text>
                         {
                             store.categories.map((category) => {
                                 const isIn = filters.includes(category.name)
@@ -51,8 +51,8 @@ const ModalComponent: React.FC<Props> = ({ isVisible, handleVisibility, handleFi
                         }
                     </View>
                 </View>
-                <TouchableOpacity style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8' }]} onPress={() => handleVisibility()}>
-                    <Text style={styles.logsButtonText} >Valider</Text>
+                <TouchableOpacity style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#E4B429', marginBottom: 20, padding: 10, width: 'auto' }]} onPress={() => handleVisibility()}>
+                    <Text style={[styles.logsButtonText, {fontSize: WINDOW_WIDTH * 0.05,}]} >Valider</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         </Modal>

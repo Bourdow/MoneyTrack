@@ -64,7 +64,7 @@ const App = () => {
             })
           }
         </View>
-        <View style={{ backgroundColor: '#202020', borderTopColor: '#fff', borderTopWidth: 5 }}>
+        <View style={{ backgroundColor: '#202020', borderTopColor: '#fff', borderTopWidth: 3 }}>
           <DrawerItemCustom title={"Déconnexion"} onPress={async () => {
             await AsyncStorage.multiRemove(['MoneyTrackToken', 'MoneyTrackUserUID', 'MoneyTrackFirstname', 'MoneyTrackLastname'])
             navigation.navigate('Login')

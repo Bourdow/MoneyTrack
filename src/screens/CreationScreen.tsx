@@ -11,9 +11,9 @@ import { Picker } from '@react-native-picker/picker';
 // Calendar 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { WINDOW_WIDTH } from '../constants';
-import moment from 'moment';
 import { useIsFocused, CommonActions } from '@react-navigation/native';
-
+// Moment 
+import moment from 'moment';
 
 type Props = DrawerScreenProps<RootStackParamsList, 'Creation'>
 
@@ -165,6 +165,7 @@ const CreationRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
                         onConfirm={date => editDatePicker(date)}
                         onCancel={hideDatePicker}
                         date={date}
+                        locale='fr_FR'
                     />
                     <Input ref={refCategory}
                         label="Catégorie" placeholder="Aucune" onFocus={() => setIsVisible(true)}
@@ -173,8 +174,8 @@ const CreationRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
                     />
                 </View>
                 <TouchableOpacity onPress={pressHandler}
-                    style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8' }]}>
-                    <Text style={styles.logsButtonText}>{buttonTitle}</Text>
+                    style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8', marginBottom: 20, padding: 10, width: 'auto' }]}>
+                    <Text style={[styles.logsButtonText, {fontSize: WINDOW_WIDTH * 0.05}]}>{buttonTitle}</Text>
                 </TouchableOpacity>
             </View>
         </View>

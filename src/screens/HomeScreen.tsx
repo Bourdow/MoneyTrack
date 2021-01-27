@@ -52,18 +52,23 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
                 <Text style={[styles.hello, { fontWeight: 'bold', fontSize: WINDOW_WIDTH * 0.18, }]}>{auth.userInfo?.firstname}</Text>
             </View>
             <Divider style={styles.bigDivider} />
-            <Text style={styles.flatlistText}>Dernières dépenses</Text>
+            <View style={styles.columnContainer}>
+                 <TouchableOpacity onPress={() => navigation.navigate('Expenses')}
+                    style={[styles.seeAllButton, styles.containerPadding, styles.containerMargin, {width: '90%'}]}>
+                    <Text style={styles.seeAllButtonText}>Voir tout</Text>
+                </TouchableOpacity>
+                <Divider style={styles.bigDivider} />
+                <Text style={styles.flatlistText}>Dernières dépenses</Text>
+            </View>
             <FlatList
                 data={lastExpenses}
                 keyExtractor={(item, index) => item.title + item.category + item.amount.toString() + "_" + index}
                 renderItem={({ item }) => <SwipeableComponent expense={item} navigation={navigation} />}
             />
-            <TouchableOpacity onPress={() => navigation.navigate('Expenses')}
-                style={[styles.seeAllButton, styles.containerPadding, styles.containerMargin]}>
-                <Text style={styles.seeAllButtonText}>Voir tout</Text>
-            </TouchableOpacity>
-            <Icon onPress={() => navigation.navigate('Creation', {})}
-                type="entypo" name="circle-with-plus" size={WINDOW_WIDTH * 0.10} color="#E4B429" />
+            <View style={{margin: WINDOW_WIDTH * 0.03}}>
+                <Icon onPress={() => navigation.navigate('Creation', {})}
+                    type="entypo" name="circle-with-plus" size={WINDOW_WIDTH * 0.10} color="#E4B429" />
+            </View>
         </View>
     )
 }

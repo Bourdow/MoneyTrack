@@ -1,7 +1,7 @@
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import React, { useEffect, useState } from 'react'
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { Divider, Icon } from 'react-native-elements'
+import { Divider, Icon, Input } from 'react-native-elements'
 import HeaderComponent from '../components/HeaderComponent'
 import SwipeableComponent from '../components/SwipeableComponent'
 import { useFirestore } from '../contexts/FirestoreContext'
@@ -10,6 +10,7 @@ import { Category, Expense, RootStackParamsList } from '../types'
 import Accordion from 'react-native-collapsible/Accordion';
 import { WINDOW_WIDTH } from '../constants'
 import ModalComponent from '../components/ModalComponent'
+import { Picker } from '@react-native-picker/picker'
 
 type Props = DrawerScreenProps<RootStackParamsList, 'Expenses'>
 
@@ -22,12 +23,18 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
     const [activeSections, setActiveSections] = useState<number[]>([])
     const [isVisible, setIsVisible] = useState<boolean>(false)
     const [filters, setFilters] = useState<string[]>([])
+    // const [isPickerVisible, setIsPickerVisible] = useState<boolean>(false)
+    const refFilter = React.createRef<Input>()
 
     const store = useFirestore()
 
     useEffect(() => {
         setExpenses(store.expenses)
     }, [store.expenses])
+
+    // useEffect(() => {
+    //     refFilter.current?.blur()
+    // }, [isPickerVisible])
 
     useEffect(() => {
         const expensesData = store.expenses
@@ -100,7 +107,7 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
         const isOpen = activeSections.includes(index)
 
         return (
-            <View style={[styles.containerMargin, { width: WINDOW_WIDTH, flexDirection: 'row', alignItems: 'center' }]}>
+            <View style={[styles.containerMargin, { width: WINDOW_WIDTH - 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
                 <Text style={styles.headerText}>{section.category.name}</Text>
                 <Icon type="ionicon" name={isOpen ? "chevron-down" : "chevron-up"} color={isOpen ? "#E4B429" : "#00A3D8"} size={WINDOW_WIDTH * 0.1} />
             </View>
@@ -148,21 +155,17 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                 <Text style={styles.hello}>Afficher par</Text>
             </View>
             <Divider style={styles.bigDivider} />
-            <ScrollView horizontal style={{ flexGrow: 0 }}>
-                {
-                    ["Par date", "Par catégorie", "Par montant"].map((value) => {
-                        return (
-                            <TouchableOpacity key={value} onPress={() => {
-                                setExpenses([])
-                                setFilter(value)
-                            }}
-                                style={[styles.seeAllButton, styles.containerPadding, styles.containerMargin, { backgroundColor: filter == value ? '#00A3D8' : '#E4B429' }]}>
-                                <Text style={styles.seeAllButtonText}>{value}</Text>
-                            </TouchableOpacity>
-                        )
-                    })
-                }
-            </ScrollView>
+            <View style={styles.containerPickerFilter}>
+                <Picker
+                    style={[{fontSize: 40, color: "#000"}]}
+                    itemStyle = {{}}
+                    selectedValue={filter}
+                    onValueChange={(value) => setFilter(value.toString())}>
+                            {
+                                ["Par date", "Par catégorie", "Par montant"].map((value, index) => <Picker.Item key={index} label={value} value={value} />)
+                            }
+                </Picker>
+            </View>
             <View style={styles.container}>
                 {
                     displayCategories ?
@@ -182,8 +185,8 @@ const ExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                         />
                 }
             </View>
-            <TouchableOpacity style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#00A3D8' }]} onPress={() => setIsVisible(true)}>
-                <Text style={styles.logsButtonText} >Filtres</Text>
+            <TouchableOpacity style={[styles.logsButton, styles.containerPadding, { backgroundColor: '#E4B429', marginBottom: 20, padding: 10, width: 'auto' }]} onPress={() => setIsVisible(true)}>
+                <Text style={[styles.logsButtonText, {fontSize: WINDOW_WIDTH * 0.05,}]} >Filtrer</Text>
             </TouchableOpacity>
         </View >
     )
