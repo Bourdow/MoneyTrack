@@ -48,7 +48,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
             <Text style={styles.flatlistText}>Dernières dépenses</Text>
             <FlatList
                 data={lastExpenses}
-                keyExtractor={(item, index) => item.title + item.category + item.amount.toString() + "_" + index}
+                keyExtractor={(item, index) => item.id + item.title + item.category + item.amount.toString() + "_" + index}
                 renderItem={({ item }) => <SwipeableComponent expense={item} navigation={navigation} />}
             />
             <TouchableOpacity onPress={() => navigation.navigate('Expenses')}

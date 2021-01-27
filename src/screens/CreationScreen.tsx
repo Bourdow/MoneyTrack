@@ -47,7 +47,7 @@ const CreationRealScreen: React.FC<PropsReal> = ({ props, isFocused }) => {
                 setCategory(props.route.params.expense!.category)
                 setDate(new Date(props.route.params.expense!.date))
             } else {
-                console.log("reset");
+                setButtonTitle('Ajouter')
                 reset()
             }
         } else {
